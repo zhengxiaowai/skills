@@ -9,6 +9,16 @@ description: Use when starting any non-trivial feature, refactor, or change that
 
 OpenSpec owns thinking and documentation (what and why). Superpowers owns execution discipline (how and doing it right). Never chain their planning layers — avoids cross-tool state management.
 
+## Activation Notice
+
+**When this skill is triggered, you MUST immediately announce it to the user before doing anything else.**
+
+Format: `Using SpecPowers [mode] mode` — include the selected mode name (Bugfix / Simple / Standard / Complex).
+
+Example: `Using SpecPowers Standard mode` or `Using SpecPowers Bugfix mode`
+
+This announcement is mandatory. Do not start any workflow step without it.
+
 ## Prerequisites
 
 **REQUIRED PLUGINS:** This skill depends on two plugins being installed:
