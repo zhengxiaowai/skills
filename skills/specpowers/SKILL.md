@@ -229,6 +229,35 @@ Supported targets:
 
 Do not install or overwrite command files without explicit user confirmation.
 
+## Mid-Flight Changes
+
+When the user requests a change while in `READY FOR FINALIZE` (waiting for finalize), do NOT treat it as a new task.
+Classify it and route it back through the appropriate stage:
+
+```
+READY FOR FINALIZE + user change request
+    │
+    ├─ Spec-level change (requirements, behavior, acceptance criteria, new scope)
+    │   → update spec via opsx:propose
+    │   → brainstorming
+    │   → implement
+    │   → verify → READY FOR FINALIZE
+    │
+    └─ Implementation-level change (fixes, tweaks, no spec impact)
+        → implement
+        → verify → READY FOR FINALIZE
+```
+
+**Classification rules:**
+
+- If the change modifies MUST/SHALL requirements, acceptance criteria, user-visible behavior, or adds new scope → spec-level.
+- If the change is a fix, refactor, or adjustment that stays within existing spec boundaries → implementation-level.
+- When in doubt, treat as spec-level. It is safer to re-validate the spec than to skip it.
+
+**Announce the re-entry:** `Returning to [stage] — [spec-level / implementation-level] change requested`.
+
+**Mode escalation:** If the change expands scope beyond the current mode, escalate before proceeding (Simple → Standard, Standard → Complex).
+
 ## Exception Handling
 
 | Exception | Action |
@@ -237,6 +266,7 @@ Do not install or overwrite command files without explicit user confirmation.
 | Bugfix more complex than expected | Escalate to Simple or Standard mode |
 | Code review feedback received | superpowers:receiving-code-review — verify before implementing |
 | Finalize changes behavior or acceptance criteria | Return to implementation, then verify and finalize again |
+| User requests change during READY FOR FINALIZE | Classify as spec-level or implementation-level, route back through appropriate stage (see Mid-Flight Changes) |
 
 ## Red Flags
 
