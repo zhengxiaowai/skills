@@ -69,39 +69,6 @@ If any required dependency is missing, stop and tell the user which dependency m
 
 All non-trivial development tasks. Pick a mode based on complexity.
 
-## Phase 0: Workspace Isolation Check
-
-**Run this before any mode workflow.** Ensures development happens in an isolated workspace, not directly on the main branch.
-
-### Detection
-
-```bash
-# Current branch
-CURRENT=$(git branch --show-current)
-
-# Default branch: try remote HEAD, then fall back to common names
-DEFAULT=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
-if [ -z "$DEFAULT" ]; then
-  # Fall back: check which of main/master/default exists
-  for candidate in main master default; do
-    if git show-ref --verify --quiet "refs/heads/$candidate" 2>/dev/null; then
-      DEFAULT="$candidate"
-      break
-    fi
-  done
-fi
-```
-
-### Decision
-
-| Condition | Action |
-|-----------|--------|
-| Already in isolated workspace (worktree) | Skip isolation, proceed to mode workflow |
-| `CURRENT == DEFAULT` (on main branch) | Invoke `superpowers:using-git-worktrees` to create isolated workspace |
-| `CURRENT != DEFAULT` (on a feature branch) | Already off main, proceed in place |
-
-When on the default branch, ask the user for consent before invoking `superpowers:using-git-worktrees`. If the user declines, proceed in place — do not block the workflow.
-
 ## Modes
 
 ```
